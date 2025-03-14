@@ -14,6 +14,8 @@ import com.kihd.cloudpicturebackend.model.entity.User;
 import com.kihd.cloudpicturebackend.model.vo.user.LoginUserVO;
 import com.kihd.cloudpicturebackend.model.vo.user.UserVO;
 import com.kihd.cloudpicturebackend.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@Api(tags = "用户模块")
 public class UserController {
 
     @Resource
@@ -31,6 +34,7 @@ public class UserController {
     /**
      * 用户注册
      */
+    @ApiOperation("用户注册")
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         ThrowUtils.throwIf(userRegisterRequest == null, ErrorCode.PARAMS_ERROR);
@@ -44,6 +48,7 @@ public class UserController {
     /**
      * 用户登录
      */
+    @ApiOperation("用户登录")
     @PostMapping("/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
@@ -56,6 +61,7 @@ public class UserController {
     /**
      * 获取当前用户信息
      */
+    @ApiOperation("获取当前用户信息")
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
@@ -65,6 +71,7 @@ public class UserController {
     /**
      * 退出登录
      */
+    @ApiOperation("退出登录")
     @PostMapping("/logout")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
         ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
@@ -75,6 +82,7 @@ public class UserController {
     /**
      * 创建用户
      */
+    @ApiOperation("创建用户")
     @PostMapping("/add")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
@@ -93,6 +101,7 @@ public class UserController {
     /**
      * 根据 id 获取用户（仅管理员）
      */
+    @ApiOperation("根据 id 获取用户（仅管理员）")
     @GetMapping("/get")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<User> getUserById(long id) {
@@ -103,8 +112,9 @@ public class UserController {
     }
 
     /**
-     * 根据 id 获取包装类
+     * 根据 id 获取脱敏用户信息
      */
+    @ApiOperation("根据 id 获取脱敏用户信息")
     @GetMapping("/get/vo")
     public BaseResponse<UserVO> getUserVOById(long id) {
         BaseResponse<User> response = getUserById(id);
@@ -115,6 +125,7 @@ public class UserController {
     /**
      * 删除用户
      */
+    @ApiOperation("删除用户")
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
@@ -128,6 +139,7 @@ public class UserController {
     /**
      * 更新用户
      */
+    @ApiOperation("更新用户")
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
@@ -146,6 +158,7 @@ public class UserController {
      *
      * @param userQueryRequest 查询请求参数
      */
+    @ApiOperation("分页获取用户封装列表（仅管理员）")
     @PostMapping("/list/page/vo")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest) {
